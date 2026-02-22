@@ -10,20 +10,20 @@ configuration {
 }
 
 * {
-    /* Catppuccin Mocha */
-    base:      #1e1e2eff;
-    mantle:    #181825ff;
-    crust:     #11111bff;
-    text:      #cdd6f4ff;
-    subtext0:  #a6adc8ff;
-    subtext1:  #bac2deff;
-    surface0:  #313244ff;
-    surface1:  #45475aff;
-    surface2:  #585b70ff;
-    overlay0:  #6c7086ff;
-    blue:      #89b4faff;
-    lavender:  #b4befeff;
-    red:       #f38ba8ff;
+    /* Neon Cyber */
+    base:      #0a0e14ff;
+    mantle:    #060a0fff;
+    crust:     #060a0fff;
+    text:      #d4dce6ff;
+    subtext0:  #8b949eff;
+    subtext1:  #d4dce6ff;
+    surface0:  #151b24ff;
+    surface1:  #1c2433ff;
+    surface2:  #1c2433ff;
+    overlay0:  #4a5568ff;
+    blue:      #0088ffff;
+    lavender:  #00e5ffff;
+    red:       #ff3d3dff;
 
     background-color: transparent;
     text-color:       @text;
