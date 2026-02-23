@@ -63,4 +63,6 @@ get_session(){
 	echo "dbus-launch ${dbus_args[*]}"
 }
 
+xset s off
+
 exec $(get_session "$1")
