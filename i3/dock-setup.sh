@@ -6,6 +6,11 @@
 # Dock 2 (dual 1080p): DP-1-2 (1920x1080) + DP-1-3 vertical (1920x1080 rotated left)
 # Undocked: laptop only (DSI-1)
 
+# Debounce: udev fires multiple DRM events per hotplug
+LOCKFILE="/tmp/dock-setup.lock"
+exec 9>"$LOCKFILE"
+flock -n 9 || exit 0
+
 sleep 1  # let display settle after hotplug
 
 connected=$(xrandr | grep " connected" | awk '{print $1}')
@@ -45,9 +50,5 @@ fi
 # Restore wallpaper after display change
 nitrogen --restore 2>/dev/null &
 
-# Restart polybar on all active monitors
-killall polybar 2>/dev/null
-sleep 0.5
-for m in $(xrandr --listmonitors | awk 'NR>1 {print $NF}'); do
-    MONITOR=$m polybar --reload main &disown
-done
+# Restart polybar (centralized in launch.sh, which also restarts tray applets)
+~/.config/polybar/launch.sh &disown

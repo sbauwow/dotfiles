@@ -44,7 +44,7 @@ bindsym $mod+z exec --no-startup-id morc_menu
 ## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
 ################################################################################################
 
-exec --no-startup-id sh -c 'sleep 3; volumeicon'
+# volumeicon removed — polybar pulseaudio module handles volume
 bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
@@ -336,11 +336,7 @@ set_from_resource $term_color15    color15
 # Polybar (launch before tray applets)
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
-# Tray applets (delayed to ensure polybar tray is ready)
-exec --no-startup-id sh -c 'sleep 3; nm-applet'
-exec --no-startup-id sh -c 'sleep 3; xfce4-power-manager'
-exec --no-startup-id sh -c 'sleep 3; pamac-tray'
-exec --no-startup-id sh -c 'sleep 3; clipit'
+# Tray applets are launched by polybar/launch.sh after the tray is ready
 # exec --no-startup-id sh -c 'sleep 3; blueman-applet'
 
 # Neon Cyber window colors
