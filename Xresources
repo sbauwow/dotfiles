@@ -66,11 +66,12 @@ URxvt.font:                       9x15,xft:TerminessTTFNerdFontMono
 !! terminus names see end of file!
 
 URxvt.depth:                      32
-URxvt.background:                 [100]#0a0e14
-URxvt*scrollBar:                  false
+URxvt.background:                 [45]#0a0e14
+URxvt*scrollBar:                  true
+URxvt*scrollBar_right:            true
 URxvt*mouseWheelScrollPage:       false
 URxvt*cursorBlink:                true
-URxvt*saveLines:                  5000
+URxvt*saveLines:                  10000
 
 ! for 'fake' transparency (without Compton) uncomment the following three lines
 ! URxvt*inheritPixmap:            true
