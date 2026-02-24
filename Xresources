@@ -68,7 +68,7 @@ URxvt.font:                       9x15,xft:TerminessTTFNerdFontMono
 URxvt.depth:                      32
 URxvt.background:                 [45]#0a0e14
 URxvt*scrollBar:                  true
-URxvt*scrollBar_right:            true
+URxvt*scrollBar_right:            false
 URxvt*mouseWheelScrollPage:       false
 URxvt*cursorBlink:                true
 URxvt*saveLines:                  10000
