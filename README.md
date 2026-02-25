@@ -6,6 +6,7 @@ My Linux desktop config files. Manjaro + X11 with tiling window managers.
 
 ```
 dotfiles/
+├── zshrc                       # Zsh config (oh-my-zsh, jonathan theme, aliases)
 ├── bashrc                      # Shell config, aliases, prompt, PATH
 ├── bash_profile                # Sources bashrc
 ├── profile                     # Env vars (QT theme, EDITOR, BROWSER)
@@ -34,6 +35,7 @@ Symlink the files to their expected locations:
 
 ```bash
 # Shell
+ln -sf ~/dotfiles/zshrc ~/.zshrc
 ln -sf ~/dotfiles/bashrc ~/.bashrc
 ln -sf ~/dotfiles/bash_profile ~/.bash_profile
 ln -sf ~/dotfiles/profile ~/.profile
