@@ -14,6 +14,7 @@ while pgrep -u $UID -x polybar >/dev/null; do sleep 0.2; done
 # Launch polybar on all monitors
 for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
     MONITOR=$m polybar --reload main &
+    sleep 0.5
 done
 
 # Wait for polybar tray to be ready, then restart tray applets
