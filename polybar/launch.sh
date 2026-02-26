@@ -11,6 +11,9 @@ killall -q polybar
 # Wait until the processes have been shut down
 while pgrep -u $UID -x polybar >/dev/null; do sleep 0.2; done
 
+# Release lock before spawning children so they don't inherit fd 9
+exec 9>&-
+
 # Launch polybar on all monitors
 for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
     MONITOR=$m polybar --reload main &
