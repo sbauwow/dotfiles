@@ -4,6 +4,7 @@
 #
 # Dock 1 (ultrawide): DP-1-1 (3440x1440) + DP-1-3 vertical (1920x1080 rotated right)
 # Dock 2 (dual 1080p): DP-1-2 (1920x1080) + DP-1-3 vertical (1920x1080 rotated left)
+# RV (Dell P3421W): DP-1-3 P3421W (top) + DP-1-2 D24h-G9 (bottom, primary) + HDMI audio
 # HDMI (4K vertical): HDMI-1 (3840x2160 rotated right) + DSI-1 laptop
 # Undocked: laptop only (DSI-1)
 
@@ -18,6 +19,13 @@ connected=$(xrandr | grep " connected" | awk '{print $1}')
 
 has_output() {
     echo "$connected" | grep -q "^$1$"
+}
+
+# Read EDID product name for a DRM connector (e.g. "DP-1-3" -> "card1-DP-3")
+edid_name() {
+    local drm_conn="card1-$(echo "$1" | sed 's/DP-1-/DP-/')"
+    local edid="/sys/class/drm/${drm_conn}/edid"
+    [ -f "$edid" ] && edid-decode "$edid" 2>/dev/null | grep "Display Product Name" | head -1 | sed "s/.*: '//;s/'//"
 }
 
 if has_output "DP-1-1" && has_output "HDMI-1"; then
@@ -37,6 +45,16 @@ elif has_output "DP-1-1"; then
     xrandr --output DP-1-3 --mode 1920x1080 --rotate right --pos 0x0
     xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 1080x1440
     notify-send "Display" "Dock 1: Ultrawide setup" 2>/dev/null
+
+elif has_output "DP-1-2" && [ "$(edid_name DP-1-3)" = "DELL P3421W" ]; then
+    # --- RV: Dell P3421W (top) + D24h-G9 (bottom, primary) + laptop (left) ---
+    xrandr --output HDMI-1 --off --output DP-1-1 --off
+    xrandr --output DP-1-3 --mode 1920x1080 --pos 1280x0
+    xrandr --output DP-1-2 --mode 1920x1080 --pos 1280x1080 --primary
+    xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 0x1220
+    # Audio: HDMI stereo out through D24h-G9
+    pactl set-card-profile alsa_card.pci-0000_00_1f.3 output:hdmi-stereo+input:analog-stereo 2>/dev/null
+    notify-send "Display" "RV: Dell P3421W + D24h-G9 + HDMI audio" 2>/dev/null
 
 elif has_output "DP-1-2"; then
     # --- Dock 2: Dual 1080p ---
