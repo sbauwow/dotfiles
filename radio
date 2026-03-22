@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+#
+# radio - CLI streaming radio player
+#
+
+set -euo pipefail
+
+# ── Station list ────────────────────────────────────────────────────
+# Format: "Name|URL"
+STATIONS=(
+  # Lo-fi Hip-Hop
+  "Lofi Girl|https://play.streamafrica.net/lofiradio"
+  "Box Lofi|http://stream.zeno.fm/f3wvbbqmdg8uv"
+  "Lofi Hip-Hop Radio|http://stream.zeno.fm/0r0xa792kwzuv"
+
+  # Synthwave
+  "Nightride FM|https://stream.nightride.fm/nightride.m4a"
+  "Nightride FM Chillsynth|https://stream.nightride.fm/chillsynth.m4a"
+  "Synthwave Radio (Plaza One)|http://radio.plaza.one/mp3"
+
+  # Reggae
+  "Reggae141|http://listen.181fm.com/181-reggae_128k.mp3"
+  "Roots Legacy Radio|http://stream.zeno.fm/wynk1h417bruv"
+  "1.FM Reggae Trade|https://strm112.1.fm/reggaetrade_mobile_mp3"
+
+  # Vaporwave
+  "Plaza One Vaporwave|http://radio.plaza.one/mp3_128"
+  "Nightwave Plaza|https://radio.plaza.one/ogg"
+  "Virtual Dream Plaza|http://radio.plaza.one/mp3"
+)
+
+# ── Colors ──────────────────────────────────────────────────────────
+BOLD='\033[1m'
+DIM='\033[2m'
+CYAN='\033[36m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+MAGENTA='\033[35m'
+RED='\033[31m'
+RESET='\033[0m'
+
+# ── Helpers ─────────────────────────────────────────────────────────
+MPV_PID=""
+
+cleanup() {
+  [[ -n "$MPV_PID" ]] && kill "$MPV_PID" 2>/dev/null
+  printf "\n${DIM}Goodbye.${RESET}\n"
+  exit 0
+}
+trap cleanup INT TERM
+
+check_deps() {
+  if ! command -v mpv &>/dev/null; then
+    echo -e "${RED}Error: mpv is required but not installed.${RESET}"
+    echo "Install it with: sudo pacman -S mpv"
+    exit 1
+  fi
+}
+
+stop_playback() {
+  if [[ -n "$MPV_PID" ]]; then
+    kill "$MPV_PID" 2>/dev/null
+    wait "$MPV_PID" 2>/dev/null
+    MPV_PID=""
+  fi
+}
+
+play_station() {
+  local name="$1" url="$2"
+  stop_playback
+  echo -e "\n${GREEN}▶ Now playing:${RESET} ${BOLD}${name}${RESET}"
+  echo -e "${DIM}  ${url}${RESET}\n"
+  mpv --no-video --really-quiet --volume=80 "$url" &
+  MPV_PID=$!
+}
+
+show_menu() {
+  clear
+  echo -e "${BOLD}${CYAN}"
+  echo "  ┌─────────────────────────────────────┐"
+  echo "  │        ♫  STREAM RADIO  ♫           │"
+  echo "  └─────────────────────────────────────┘"
+  echo -e "${RESET}"
+
+  local idx=1
+  local current_genre=""
+
+  for entry in "${STATIONS[@]}"; do
+    local name="${entry%%|*}"
+
+    # Genre headers
+    if (( idx == 1 )); then
+      echo -e "  ${MAGENTA}${BOLD}Lo-fi Hip-Hop${RESET}"
+    elif (( idx == 4 )); then
+      echo -e "\n  ${MAGENTA}${BOLD}Synthwave${RESET}"
+    elif (( idx == 7 )); then
+      echo -e "\n  ${MAGENTA}${BOLD}Reggae${RESET}"
+    elif (( idx == 10 )); then
+      echo -e "\n  ${MAGENTA}${BOLD}Vaporwave${RESET}"
+    fi
+
+    printf "    ${YELLOW}%d)${RESET} %s\n" "$idx" "$name"
+    ((idx++))
+  done
+
+  echo ""
+  echo -e "  ${DIM}s) Stop playback${RESET}"
+  echo -e "  ${DIM}q) Quit${RESET}"
+  echo ""
+}
+
+# ── Main ────────────────────────────────────────────────────────────
+check_deps
+show_menu
+
+while true; do
+  echo -ne "${CYAN}radio>${RESET} "
+  read -r choice
+
+  case "$choice" in
+    q|Q|quit|exit)
+      cleanup
+      ;;
+    s|S|stop)
+      stop_playback
+      echo -e "${DIM}Stopped.${RESET}"
+      ;;
+    m|M|menu)
+      show_menu
+      ;;
+    ''|*[!0-9]*)
+      echo -e "${DIM}Enter a station number, 's' to stop, 'm' for menu, or 'q' to quit.${RESET}"
+      ;;
+    *)
+      if (( choice >= 1 && choice <= ${#STATIONS[@]} )); then
+        local_entry="${STATIONS[$((choice - 1))]}"
+        local_name="${local_entry%%|*}"
+        local_url="${local_entry##*|}"
+        play_station "$local_name" "$local_url"
+      else
+        echo -e "${RED}Invalid station number.${RESET}"
+      fi
+      ;;
+  esac
+done
