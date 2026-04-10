@@ -32,7 +32,7 @@ else
     xrandr --output DP-1-2 --off
     xrandr --output DP-1-3 --off
     xrandr --output HDMI-1 --off
-    xrandr --output DSI-1 --mode 800x1280 --rotate left --pos 0x0 --primary
+    xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 0x0 --primary
     notify-send "Display" "Undocked: Laptop only" 2>/dev/null
 fi
 
