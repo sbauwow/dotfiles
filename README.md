@@ -17,8 +17,11 @@ dotfiles/
 ├── herbstluftwm/
 │   └── autostart               # herbstluftwm config (Super as mod key)
 ├── picom.conf                  # Compositor (shadows, vsync, blur)
-└── dunst/
-    └── dunstrc                 # Notification daemon
+├── dunst/
+│   └── dunstrc                 # Notification daemon
+└── systemd/
+    └── logind.conf.d/
+        └── power-button.conf   # Require long-press to poweroff
 ```
 
 ## Window Managers
@@ -54,4 +57,14 @@ ln -sf ~/dotfiles/herbstluftwm/autostart ~/.config/herbstluftwm/autostart
 ln -sf ~/dotfiles/picom.conf ~/.config/picom.conf
 mkdir -p ~/.config/dunst
 ln -sf ~/dotfiles/dunst/dunstrc ~/.config/dunst/dunstrc
+
+# systemd drop-ins (requires sudo; not symlinked — /etc is root-owned)
+sudo install -Dm644 ~/dotfiles/systemd/logind.conf.d/power-button.conf \
+    /etc/systemd/logind.conf.d/power-button.conf
+sudo systemctl restart systemd-logind   # or reboot
 ```
+
+## Power button
+
+`systemd/logind.conf.d/power-button.conf` swaps short-press / long-press: a tap does nothing, a ~5s hold powers off. The ~5s threshold is hardcoded in systemd. Avoids accidental poweroffs from bumping the button.
+
