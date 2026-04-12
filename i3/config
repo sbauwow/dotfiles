@@ -82,7 +82,7 @@ bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 bindsym $mod+Shift+h exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
-bindsym $mod+p exec --no-startup-id ~/.i3/toggle-sz-swap.sh
+bindsym $mod+p exec --no-startup-id ~/.i3/toggle-dsi-flip.sh
 
 # focus_follows_mouse no
 
@@ -342,7 +342,7 @@ set_from_resource $term_color15    color15
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Tray applets are launched by polybar/launch.sh after the tray is ready
-# exec --no-startup-id sh -c 'sleep 3; blueman-applet'
+exec --no-startup-id sh -c 'sleep 3; blueman-applet'
 
 # Neon Cyber window colors
 # class                   border  backgr. text    indic.   child_border

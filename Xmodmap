@@ -1,3 +1,0 @@
-! Swap S and Z in Dvorak
-keycode 47 = z Z
-keycode 61 = s S
