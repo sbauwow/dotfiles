@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Switch wallpaper + regenerate pywal palette via wpg.
+# wpg's execute_cmd hook (~/.config/polybar/launch.sh) restarts polybar+dunst.
+#
+# Usage:
+#   wp                  list available wallpapers
+#   wp <name>           switch to wallpaper by basename (with or without extension)
+#   wp /path/to/img     add image to wpg dir (symlink) then switch
+#   wp random           pick a random wallpaper from the wpg dir
+
+set -euo pipefail
+
+WPG_DIR="$HOME/.config/wpg/wallpapers"
+
+list_wallpapers() {
+    find "$WPG_DIR" -maxdepth 1 -type f -o -type l | sort | while read -r f; do
+        basename "$f"
+    done
+}
+
+current_wallpaper() {
+    [ -r "$HOME/.fehbg" ] && grep -oE "'[^']+'" "$HOME/.fehbg" | tr -d "'" | tail -1
+}
+
+switch_to() {
+    local name="$1"
+    echo ":: switching to $name"
+    wpg -s "$name"
+    echo ":: done — current: $(current_wallpaper)"
+}
+
+case "${1:-}" in
+    "")
+        echo "wallpapers in $WPG_DIR:"
+        list_wallpapers | sed 's/^/  /'
+        echo
+        echo "current: $(current_wallpaper)"
+        ;;
+    random)
+        pick=$(list_wallpapers | shuf -n 1)
+        [ -z "$pick" ] && { echo "no wallpapers in $WPG_DIR"; exit 1; }
+        switch_to "$pick"
+        ;;
+    *)
+        arg="$1"
+        if [ -f "$arg" ] && [[ "$arg" == */* ]]; then
+            # Path given — add to wpg dir, then switch by basename
+            wpg -a "$arg"
+            switch_to "$(basename "$arg")"
+        else
+            # Name given — try exact, then prefix match
+            if [ -e "$WPG_DIR/$arg" ]; then
+                switch_to "$arg"
+            else
+                match=$(list_wallpapers | grep -i "^${arg}" | head -1 || true)
+                [ -z "$match" ] && { echo "no match for '$arg' in $WPG_DIR"; exit 1; }
+                switch_to "$match"
+            fi
+        fi
+        ;;
+esac

@@ -5,33 +5,78 @@ LOCKFILE="/tmp/polybar-launch.lock"
 exec 9>"$LOCKFILE"
 flock -n 9 || exit 0
 
-# Terminate already running bar instances
-killall -q polybar
+WATCHDOG_PID="/tmp/polybar-watchdog.pid"
+TRAY_APPLETS=(nm-applet xfce4-power-manager)
 
-# Wait until the processes have been shut down
-while pgrep -u $UID -x polybar >/dev/null; do sleep 0.2; done
+kill_applets() {
+    killall -q "${TRAY_APPLETS[@]}"
+}
 
-# Release lock before spawning children so they don't inherit fd 9
+restart_dunst() {
+    killall -q dunst
+    (dunst 9>&- &disown) 2>/dev/null
+}
+
+launch_bars() {
+    killall -q polybar
+    while pgrep -u $UID -x polybar >/dev/null; do sleep 0.2; done
+
+    # Merge pywal-derived polybar palette if present (overrides static block in ~/.Xresources)
+    if [ -f "$HOME/.cache/wal/colors-polybar.Xresources" ]; then
+        xrdb -merge "$HOME/.cache/wal/colors-polybar.Xresources"
+    fi
+
+    for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+        # Close lock fd in the polybar child so it doesn't keep the launch lock held
+        MONITOR=$m polybar --reload main 9>&- &disown
+        sleep 0.5
+    done
+}
+
+wait_for_tray() {
+    for i in $(seq 1 20); do
+        xdotool search --name "polybar-main_" >/dev/null 2>&1 && return
+        sleep 0.3
+    done
+}
+
+launch_applets() {
+    for app in "${TRAY_APPLETS[@]}"; do
+        "$app" &disown 2>/dev/null
+    done
+}
+
+# Kill previous watchdog
+if [ -f "$WATCHDOG_PID" ]; then
+    kill "$(cat "$WATCHDOG_PID")" 2>/dev/null
+    rm -f "$WATCHDOG_PID"
+fi
+
+kill_applets
+launch_bars
+
+# Release lock now that all bars are spawned
 exec 9>&-
 
-# Launch polybar on all monitors
-for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-    MONITOR=$m polybar --reload main &
-    sleep 0.5
-done
+wait_for_tray
+sleep 1
+launch_applets
+restart_dunst
 
-# Wait for polybar tray to be ready, then restart tray applets
+# Watchdog: restart everything if polybar dies
 (
-    sleep 2
-
-    # Kill stale tray applets so they re-dock into the new tray
-    killall -q nm-applet xfce4-power-manager pamac-tray clipit
-
-    sleep 1
-    nm-applet &disown 2>/dev/null
-    xfce4-power-manager &disown 2>/dev/null
-    pamac-tray &disown 2>/dev/null
-    clipit &disown 2>/dev/null
+    echo $$ > "$WATCHDOG_PID"
+    while true; do
+        sleep 10
+        if ! pgrep -u $UID -x polybar >/dev/null; then
+            kill_applets
+            sleep 1
+            launch_bars
+            wait_for_tray
+            sleep 1
+            launch_applets
+        fi
+    done
 ) &disown
 
 echo "Polybar launched..."

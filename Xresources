@@ -68,7 +68,7 @@ URxvt.font:                       9x15,xft:TerminessTTFNerdFontMono
 URxvt.depth:                      32
 URxvt.background:                 [45]#0a0e14
 URxvt*scrollBar:                  true
-URxvt*scrollBar_right:            false
+URxvt*scrollBar_right:            true
 URxvt*mouseWheelScrollPage:       false
 URxvt*cursorBlink:                true
 URxvt*saveLines:                  10000
@@ -91,6 +91,10 @@ URxvt.keysym.Control-Up:          \033[1;5A
 URxvt.keysym.Shift-Control-Up:    \033[1;6A
 URxvt.keysym.Control-Down:        \033[1;5B
 URxvt.keysym.Shift-Control-Down:  \033[1;6B
+
+!! Polybar palette is owned by pywal — see ~/.cache/wal/colors-polybar.Xresources
+!! (merged by ~/.config/polybar/launch.sh on every bar start). Static fallbacks
+!! live in the [neon] block of ~/.config/polybar/config.ini.
 
 ! The Terminus font uses the following X-names:
 ! -xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso10646-1
