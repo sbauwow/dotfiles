@@ -24,6 +24,11 @@ launch_bars() {
     # Merge pywal-derived polybar palette if present (overrides static block in ~/.Xresources)
     if [ -f "$HOME/.cache/wal/colors-polybar.Xresources" ]; then
         xrdb -merge "$HOME/.cache/wal/colors-polybar.Xresources"
+        # Reload i3 so set_from_resource $pb_* picks up the new palette.
+        # Guarded — this script also runs under herbstluftwm where i3 isn't present.
+        if command -v i3-msg >/dev/null && i3-msg -t get_version >/dev/null 2>&1; then
+            i3-msg reload >/dev/null 2>&1 || true
+        fi
     fi
 
     for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do

@@ -21,13 +21,13 @@ bindsym $mod+n border normal
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font xft:URWGothic-Book 11
+font pango:JetBrainsMono Nerd Font 10
 
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec terminal
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -45,7 +45,7 @@ bindsym $mod+z exec --no-startup-id morc_menu
 ################################################################################################
 
 # volumeicon removed — polybar pulseaudio module handles volume
-bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
+bindsym $mod+Ctrl+m exec alacritty -e alsamixer
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
@@ -66,14 +66,15 @@ bindsym $mod+Shift+f exec firefox
 bindsym $mod+Shift+m exec --no-startup-id ~/.i3/dock-setup.sh
 
 # Start Applications
-bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
+bindsym $mod+Ctrl+b exec alacritty -e bmenu
 bindsym $mod+F2 exec palemoon
-bindsym $mod+F3 exec thunar
+bindsym $mod+F3 exec alacritty -e yazi
 # bindsym $mod+F3 exec ranger
 bindsym $mod+Shift+F3 exec pcmanfm_pkexec
-bindsym $mod+F5 exec terminal -e 'mocp'
+bindsym $mod+F5 exec alacritty -e mocp
 bindsym $mod+m exec --no-startup-id ~/.i3/chillsky-toggle.sh
 bindsym $mod+x exec --no-startup-id ~/.i3/somafm-reggae-toggle.sh
+bindsym $mod+Shift+v exec --no-startup-id ~/.i3/vaporwave-toggle.sh
 bindsym $mod+t exec --no-startup-id pkill picom
 bindsym $mod+Ctrl+t exec --no-startup-id picom -b
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
@@ -83,6 +84,10 @@ bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 bindsym $mod+Shift+h exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 bindsym $mod+p exec --no-startup-id ~/.i3/toggle-dsi-flip.sh
+
+# Quick-launch tools
+bindsym $mod+g exec alacritty -e lazygit
+bindsym $mod+Shift+t exec alacritty -e btop
 
 # focus_follows_mouse no
 
@@ -256,7 +261,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 bindsym $mod+0 mode "$mode_system"
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
+    bindsym l exec --no-startup-id xscreensaver-command -lock, mode "default"
     bindsym s exec --no-startup-id i3exit suspend, mode "default"
     bindsym u exec --no-startup-id i3exit switch_user, mode "default"
     bindsym e exec --no-startup-id i3exit logout, mode "default"
@@ -294,16 +299,19 @@ mode "resize" {
 }
 
 # Lock screen (moved from $mod+9 to $mod+Shift+x to free $mod+9 for Kindle workspace)
-bindsym $mod+Shift+x exec --no-startup-id blurlock
+bindsym $mod+Shift+x exec --no-startup-id xscreensaver-command -lock
 
 # Autostart applications
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec_always --no-startup-id feh --bg-fill ~/nature.jpeg
+# Wallpaper + colorscheme. Change $wallpaper to switch.
+# Image must first be imported once with `wpg -a /path/to/img.png`.
+set $wallpaper mythmountain.png
+exec_always --no-startup-id wpg -s $wallpaper
 exec --no-startup-id sleep 1; picom -b
 #exec --no-startup-id manjaro-hello
 exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -time 10 -locker blurlock
+exec --no-startup-id xscreensaver --no-splash
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 
@@ -338,21 +346,34 @@ set_from_resource $term_color13    color13
 set_from_resource $term_color14    color14
 set_from_resource $term_color15    color15
 
+# Polybar palette — sourced from xrdb (pywal/wpg), with Neon Cyber fallbacks
+# for fresh X sessions where ~/.cache/wal has not been merged yet.
+# launch.sh merges ~/.cache/wal/colors-polybar.Xresources then reloads i3 so
+# set_from_resource picks up the new values.
+set_from_resource $pb_bg        polybar.bg        #0a0e14
+set_from_resource $pb_bg_dark   polybar.bg-dark   #060a0f
+set_from_resource $pb_bg_hl     polybar.bg-hl     #151b24
+set_from_resource $pb_fg        polybar.fg        #d4dce6
+set_from_resource $pb_fg_gutter polybar.fg-gutter #1c2433
+set_from_resource $pb_comment   polybar.comment   #4a5568
+set_from_resource $pb_cyan      polybar.cyan      #00e5ff
+set_from_resource $pb_red       polybar.red       #ff3d3d
+
 # Polybar (launch before tray applets)
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Tray applets are launched by polybar/launch.sh after the tray is ready
 exec --no-startup-id sh -c 'sleep 3; blueman-applet'
 
-# Neon Cyber window colors
-# class                   border  backgr. text    indic.   child_border
-  client.focused          #00e5ff #0a0e14 #d4dce6 #00e5ff  #00e5ff
-  client.focused_inactive #1c2433 #0a0e14 #4a5568 #1c2433  #1c2433
-  client.unfocused        #1c2433 #0a0e14 #4a5568 #1c2433  #1c2433
-  client.urgent           #ff3d3d #0a0e14 #d4dce6 #ff3d3d  #ff3d3d
-  client.placeholder      #060a0f #0a0e14 #d4dce6 #060a0f  #060a0f
+# Window colors — wal-driven via the $pb_* palette above
+# class                   border     backgr.    text       indic.     child_border
+  client.focused          $pb_cyan   $pb_bg     $pb_fg     $pb_cyan   $pb_cyan
+  client.focused_inactive $pb_fg_gutter $pb_bg  $pb_comment $pb_fg_gutter $pb_fg_gutter
+  client.unfocused        $pb_fg_gutter $pb_bg  $pb_comment $pb_fg_gutter $pb_fg_gutter
+  client.urgent           $pb_red    $pb_bg     $pb_fg     $pb_red    $pb_red
+  client.placeholder      $pb_bg_dark $pb_bg    $pb_fg     $pb_bg_dark $pb_bg_dark
 
-  client.background       #060a0f
+  client.background       $pb_bg_dark
 
 #############################
 ### settings for i3-gaps: ###
