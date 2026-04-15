@@ -309,8 +309,7 @@ set $wallpaper mythmountain.png
 exec_always --no-startup-id wpg -s $wallpaper
 exec --no-startup-id sleep 1; picom -b
 #exec --no-startup-id manjaro-hello
-exec --no-startup-id start_conky_maia
-# exec --no-startup-id start_conky_green
+exec --no-startup-id ~/dotfiles/conky/launch.sh
 exec --no-startup-id xscreensaver --no-splash
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
