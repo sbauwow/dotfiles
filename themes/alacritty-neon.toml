@@ -1,0 +1,6 @@
+# Neon Cyber — pywal-driven via wal cache
+[general]
+import = ["~/.cache/wal/colors-alacritty.toml"]
+
+[window]
+opacity = 0.95

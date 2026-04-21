@@ -18,12 +18,25 @@ has_output() {
     echo "$connected" | grep -q "^$1$"
 }
 
-if has_output "DP-1-1" && has_output "DP-1-2"; then
+# Work HDMI monitor EDID (2560x1440 QHD). Unique fingerprint — matches only this display.
+WORK_HDMI_EDID="bddd7ca3f93d7033383570f3e2231d92"
+hdmi_edid=$(md5sum /sys/class/drm/card*-HDMI-A-1/edid 2>/dev/null | awk '{print $1}' | head -1)
+
+if has_output "HDMI-1" && [ "$hdmi_edid" = "$WORK_HDMI_EDID" ] && ! has_output "DP-1-1" && ! has_output "DP-1-2"; then
+    # --- Work: laptop rotated right (primary, left) + HDMI QHD to its right ---
+    xrandr --output DP-1-1 --off --output DP-1-2 --off --output DP-1-3 --off
+    xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 0x0 --primary
+    xrandr --output HDMI-1 --mode 2560x1440 --pos 1280x0 --rotate normal
+    theme=work
+    notify-send "Display" "Work: laptop + HDMI QHD (Win11 theme)" 2>/dev/null
+
+elif has_output "DP-1-1" && has_output "DP-1-2"; then
     # --- Dock: P3421W ultrawide (DP-1-2, primary) + P2422HE vertical (DP-1-1, right) + laptop (below) ---
     xrandr --output HDMI-1 --off --output DP-1-3 --off
     xrandr --output DP-1-2 --mode 3440x1440 --pos 0x199 --rotate normal --primary
     xrandr --output DP-1-1 --mode 1920x1080 --rotate left --pos 3440x0
     xrandr --output DSI-1 --mode 800x1280 --rotate left --pos 997x1639
+    theme=home
     notify-send "Display" "Dock: P3421W ultrawide + P2422HE vertical" 2>/dev/null
 
 else
@@ -33,11 +46,9 @@ else
     xrandr --output DP-1-3 --off
     xrandr --output HDMI-1 --off
     xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 0x0 --primary
+    theme=home
     notify-send "Display" "Undocked: Laptop only" 2>/dev/null
 fi
 
-# Restore wallpaper after display change
-nitrogen --restore 2>/dev/null &
-
-# Restart polybar (centralized in launch.sh, which also restarts tray applets)
-~/.config/polybar/launch.sh &disown
+# Apply theme (wallpaper + polybar + alacritty) — also restarts polybar
+~/dotfiles/themes/apply-theme.sh "$theme" &disown
