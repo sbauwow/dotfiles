@@ -26,7 +26,24 @@ switch_to() {
     local name="$1"
     echo ":: switching to $name"
     wpg -s "$name"
+    refresh_polybar
     echo ":: done — current: $(current_wallpaper)"
+}
+
+refresh_polybar() {
+    # Merge the freshly-written pywal palette into xrdb, then restart polybar.
+    # Bypasses ~/.config/polybar/launch.sh on purpose — that script spawns a
+    # crash-recovery watchdog whose stale instances race each other and stomp
+    # on color refreshes. Here we just do the minimum needed for `wp`.
+    local palette="$HOME/.cache/wal/colors-polybar.Xresources"
+    [ -f "$palette" ] && xrdb -merge "$palette"
+
+    killall -q polybar
+    while pgrep -u "$UID" -x polybar >/dev/null; do sleep 0.1; done
+
+    for m in $(xrandr --query | awk '/ connected/ {print $1}'); do
+        MONITOR=$m polybar --reload main >/dev/null 2>&1 &disown
+    done
 }
 
 case "${1:-}" in

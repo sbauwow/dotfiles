@@ -71,7 +71,9 @@ bindsym $mod+F2 exec palemoon
 bindsym $mod+F3 exec alacritty -e yazi
 # bindsym $mod+F3 exec ranger
 bindsym $mod+Shift+F3 exec pcmanfm_pkexec
+bindsym $mod+F4 exec obsidian
 bindsym $mod+F5 exec alacritty -e mocp
+bindsym $mod+F6 exec Telegram
 bindsym $mod+m exec --no-startup-id ~/.i3/chillsky-toggle.sh
 bindsym $mod+x exec --no-startup-id ~/.i3/somafm-reggae-toggle.sh
 bindsym $mod+Shift+v exec --no-startup-id ~/.i3/vaporwave-toggle.sh
@@ -299,18 +301,17 @@ mode "resize" {
 }
 
 # Lock screen (moved from $mod+9 to $mod+Shift+x to free $mod+9 for Kindle workspace)
-bindsym $mod+Shift+x exec --no-startup-id xscreensaver-command -lock
+bindsym $mod+Shift+x exec --no-startup-id i3lock -c 3EB489
 
 # Autostart applications
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-# Wallpaper + colorscheme. Change $wallpaper to switch.
-# Image must first be imported once with `wpg -a /path/to/img.png`.
-set $wallpaper mythmountain.png
-exec_always --no-startup-id wpg -s $wallpaper
+# Wallpaper + colorscheme. Use `wp <name>` to switch (wpg tracks current via .current symlink).
+# `exec` (not `exec_always`) so i3 reloads don't override a fresh `wp` selection.
+exec --no-startup-id bash -c 'cur=$(basename "$(readlink "$HOME/.config/wpg/.current")" 2>/dev/null); [ -n "$cur" ] && wpg -s "$cur"'
 exec --no-startup-id sleep 1; picom -b
 #exec --no-startup-id manjaro-hello
 exec --no-startup-id ~/dotfiles/conky/launch.sh
-exec --no-startup-id xscreensaver --no-splash
+#exec --no-startup-id xscreensaver --no-splash
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 

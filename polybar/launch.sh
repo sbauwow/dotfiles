@@ -32,6 +32,10 @@ launch_bars() {
     fi
 
     for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+        # Skip monitors listed in POLYBAR_EXCLUDE (space-separated)
+        if [ -n "$POLYBAR_EXCLUDE" ] && echo " $POLYBAR_EXCLUDE " | grep -q " $m "; then
+            continue
+        fi
         # Close lock fd in the polybar child so it doesn't keep the launch lock held
         MONITOR=$m polybar --reload main 9>&- &disown
         sleep 0.5
@@ -70,7 +74,8 @@ restart_dunst
 
 # Watchdog: restart everything if polybar dies
 (
-    echo $$ > "$WATCHDOG_PID"
+    # $BASHPID is the subshell's own PID; $$ would be the parent (already exited).
+    echo $BASHPID > "$WATCHDOG_PID"
     while true; do
         sleep 10
         if ! pgrep -u $UID -x polybar >/dev/null; then
