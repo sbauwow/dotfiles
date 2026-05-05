@@ -5,9 +5,6 @@ and should be symlinked or copied to `~/CLAUDE.md` so it loads on every session.
 
 ## Hard rules
 
-- **NEVER use `sudo`.** Do not run it, do not suggest it, do not wrap anything
-  in it. If privilege is required, tell the user to run the command themselves
-  (they can prefix it with `! ` in the Claude prompt to pipe output back).
 - **NEVER push, force-push, or commit without explicit instruction.** Authoring
   a commit is fine only when asked.
 - **NEVER bypass pre-commit hooks** (`--no-verify`, `--no-gpg-sign`) unless
