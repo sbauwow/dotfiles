@@ -1,0 +1,10 @@
+#!/bin/sh
+# Launch a fresh tmux session per alacritty window so kindle-buddy can mirror
+# whichever terminal is focused. Session dies with the last client (no orphan
+# accumulation). If we somehow get invoked from inside an existing tmux,
+# fall back to a plain shell instead of nesting.
+if [ -n "$TMUX" ]; then
+  exec "${SHELL:-/bin/sh}"
+fi
+NAME="t-$$"
+exec tmux new-session -A -s "$NAME" \; set-option destroy-unattached on

@@ -23,6 +23,9 @@ decorations = "None"
 [scrolling]
 history = 10000
 
+[terminal.shell]
+program = "/home/stathis/dotfiles/local-bin/alacritty-tmux"
+
 [[keyboard.bindings]]
 key = "Return"
 mods = "Shift"
