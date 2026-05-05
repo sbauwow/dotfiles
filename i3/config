@@ -128,8 +128,8 @@ bindsym $mod+v split v;exec notify-send 'tile vertically'
 bindsym $mod+q split toggle
 
 # voice dictation (nerd-dictation)
-bindsym $mod+o exec --no-startup-id ~/nerd-dictation/nerd-dictation begin --vosk-model-dir ~/nerd-dictation/model &
-bindsym $mod+Shift+o exec --no-startup-id ~/nerd-dictation/nerd-dictation end
+bindsym $mod+o exec --no-startup-id ~/nerd-dictation/.venv/bin/python ~/nerd-dictation/nerd-dictation begin --vosk-model-dir ~/nerd-dictation/model/en &
+bindsym $mod+Shift+o exec --no-startup-id ~/nerd-dictation/.venv/bin/python ~/nerd-dictation/nerd-dictation end
 
 # toggle fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
