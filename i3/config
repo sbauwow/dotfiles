@@ -219,6 +219,7 @@ bindsym $mod+Shift+9 move container to workspace $ws9; workspace $ws9
 # assign [class="Skype"] $ws5
 
 # Open specific applications in floating mode
+for_window [class="Alacritty"] border pixel 4
 for_window [title="alsamixer"] floating enable border pixel 1
 for_window [class="calamares"] floating enable border normal
 for_window [class="Clipgrab"] floating enable
@@ -372,8 +373,8 @@ exec --no-startup-id sh -c 'sleep 3; blueman-applet'
 # tone too close to the gutter on monochrome palettes (mythmountain etc.).
 # class                   border     backgr.    text       indic.     child_border
   client.focused          $pb_fg     $pb_bg     $pb_fg     $pb_fg     $pb_fg
-  client.focused_inactive $pb_fg_gutter $pb_bg  $pb_comment $pb_fg_gutter $pb_fg_gutter
-  client.unfocused        $pb_fg_gutter $pb_bg  $pb_comment $pb_fg_gutter $pb_fg_gutter
+  client.focused_inactive $pb_bg     $pb_bg     $pb_comment $pb_bg     $pb_bg
+  client.unfocused        $pb_bg     $pb_bg     $pb_comment $pb_bg     $pb_bg
   client.urgent           $pb_red    $pb_bg     $pb_fg     $pb_red    $pb_red
   client.placeholder      $pb_bg_dark $pb_bg    $pb_fg     $pb_bg_dark $pb_bg_dark
 
@@ -397,7 +398,7 @@ smart_gaps on
 
 # Smart borders (draw borders around container only if it is not the only container on this workspace) 
 # on|no_gaps (on=always activate and no_gaps=only activate if the gap size to the edge of the screen is 0)
-smart_borders on
+# smart_borders on
 
 # Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
 set $mode_gaps Gaps: (o) outer, (i) inner
