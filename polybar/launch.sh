@@ -31,13 +31,22 @@ launch_bars() {
         fi
     fi
 
+    primary=$(xrandr --query | awk '/ connected primary/ {print $1; exit}')
     for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
         # Skip monitors listed in POLYBAR_EXCLUDE (space-separated)
         if [ -n "$POLYBAR_EXCLUDE" ] && echo " $POLYBAR_EXCLUDE " | grep -q " $m "; then
             continue
         fi
+        # Only the primary monitor runs the `main` bar (which owns the system tray).
+        # All others run `secondary` — same modules minus tray — so multiple bars
+        # don't race for _NET_SYSTEM_TRAY_S0 and leave applets unparented.
+        if [ "$m" = "$primary" ] || [ -z "$primary" ]; then
+            bar=main
+        else
+            bar=secondary
+        fi
         # Close lock fd in the polybar child so it doesn't keep the launch lock held
-        MONITOR=$m polybar --reload main 9>&- &disown
+        MONITOR=$m polybar --reload "$bar" 9>&- &disown
         sleep 0.5
     done
 }
