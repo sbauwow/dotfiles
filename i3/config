@@ -317,6 +317,10 @@ exec --no-startup-id ~/dotfiles/conky/launch.sh
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 exec_always --no-startup-id xset -b
+# Re-map the touchscreen to DSI-1 on every i3 start/reload. xinput
+# map-to-output reads DSI-1's current rotation, so this is correct whether
+# the screen is normal/left/right/inverted at the moment of the reload.
+exec_always --no-startup-id xinput map-to-output "ELAN Touchscreen" DSI-1
 
 # Color palette used for the terminal ( ~/.Xresources file )
 # Colors are gathered based on the documentation:
