@@ -2,6 +2,7 @@
 # Auto-detect dock and configure monitors.
 # Called by udev rule on display hotplug or manually via i3 keybind.
 #
+# Work: HDMI QHD above, DSI-1 laptop centered below
 # Dock: P3421W ultrawide (DP-1-2, primary) + P2422HE vertical (DP-1-1, right) + DSI-1 laptop (below)
 # Undocked: laptop only (DSI-1)
 
@@ -23,12 +24,13 @@ WORK_HDMI_EDID="bddd7ca3f93d7033383570f3e2231d92"
 hdmi_edid=$(md5sum /sys/class/drm/card*-HDMI-A-1/edid 2>/dev/null | awk '{print $1}' | head -1)
 
 if has_output "HDMI-1" && [ "$hdmi_edid" = "$WORK_HDMI_EDID" ] && ! has_output "DP-1-1" && ! has_output "DP-1-2"; then
-    # --- Work: laptop rotated right (primary, left) + HDMI QHD to its right ---
+    # --- Work: HDMI QHD above (centered), laptop (rotated right) below ---
+    # HDMI 2560 wide, DSI 1280 wide → DSI x-offset = (2560-1280)/2 = 640 to center under HDMI.
     xrandr --output DP-1-1 --off --output DP-1-2 --off --output DP-1-3 --off
-    xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 0x0 --primary
-    xrandr --output HDMI-1 --mode 2560x1440 --pos 1280x0 --rotate normal
+    xrandr --output HDMI-1 --mode 2560x1440 --pos 0x0 --rotate normal
+    xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 640x1440 --primary
     theme=work
-    notify-send "Display" "Work: laptop + HDMI QHD (Win11 theme)" 2>/dev/null
+    notify-send "Display" "Work: HDMI QHD above + laptop centered below (Win11 theme)" 2>/dev/null
 
 elif has_output "DP-1-1" && has_output "DP-1-2"; then
     # --- Dock: P3421W ultrawide (DP-1-2, primary) + P2422HE vertical (DP-1-1, right) + laptop (below) ---
