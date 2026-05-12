@@ -23,6 +23,9 @@ decorations = "None"
 [scrolling]
 history = 10000
 
+[bell]
+duration = 0
+
 [terminal.shell]
 program = "/home/stathis/dotfiles/local-bin/alacritty-tmux"
 
