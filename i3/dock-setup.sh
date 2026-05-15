@@ -37,7 +37,7 @@ elif has_output "DP-1-1" && has_output "DP-1-2"; then
     xrandr --output HDMI-1 --off --output DP-1-3 --off
     xrandr --output DP-1-2 --mode 3440x1440 --pos 0x199 --rotate normal --primary
     xrandr --output DP-1-1 --mode 1920x1080 --rotate left --pos 3440x0
-    xrandr --output DSI-1 --mode 800x1280 --rotate left --pos 997x1639
+    xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 997x1639
     theme=home
     notify-send "Display" "Dock: P3421W ultrawide + P2422HE vertical" 2>/dev/null
 
