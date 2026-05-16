@@ -41,6 +41,16 @@ elif has_output "DP-1-1" && has_output "DP-1-2"; then
     theme=home
     notify-send "Display" "Dock: P3421W ultrawide + P2422HE vertical" 2>/dev/null
 
+elif has_output "DP-1-2"; then
+    # --- Dock (ultrawide only): P3421W (DP-1-2, primary) + laptop centered below ---
+    # Reached when DP-1-2 is up but DP-1-1 (vertical) is not connected.
+    # DSI displayed 1280 wide (800x1280 rotated right) → x=(3440-1280)/2=1080.
+    xrandr --output DP-1-1 --off --output DP-1-3 --off --output HDMI-1 --off
+    xrandr --output DP-1-2 --mode 3440x1440 --pos 0x0 --rotate normal --primary
+    xrandr --output DSI-1 --mode 800x1280 --rotate right --pos 1080x1440
+    theme=home
+    notify-send "Display" "Dock: P3421W ultrawide + laptop below" 2>/dev/null
+
 else
     # --- Undocked: Laptop only ---
     xrandr --output DP-1-1 --off
