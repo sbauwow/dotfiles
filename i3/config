@@ -322,6 +322,9 @@ exec_always --no-startup-id xset -b
 # the screen is normal/left/right/inverted at the moment of the reload.
 exec_always --no-startup-id xinput map-to-output "ELAN Touchscreen" DSI-1
 
+# Phone-style auto-rotate: active only in tablet mode + undocked.
+exec --no-startup-id python3 /home/stathis/desktop-keyboard/autorotate.py
+
 # Color palette used for the terminal ( ~/.Xresources file )
 # Colors are gathered based on the documentation:
 # https://i3wm.org/docs/userguide.html#xresources
