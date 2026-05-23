@@ -72,8 +72,6 @@ ZSH_THEME="jonathan"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -100,9 +98,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 export PATH="$HOME/.npm-global/bin:$PATH"
-
-# OpenClaw Completion
-source "/home/stathis/.openclaw/completions/openclaw.zsh"
 
 # Ollama model switching aliases
 alias vis='curl -s http://localhost:11434/api/generate -d "{\"model\":\"qwen2.5:14b\",\"keep_alive\":0}" > /dev/null && ollama run minicpm-v'
