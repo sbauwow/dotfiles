@@ -1,3 +1,8 @@
+# Launch each window into its own tmux session (t-<pid>) so kindle-buddy can
+# mirror the focused terminal. `alacritty -e <cmd>` tool windows bypass this.
+[terminal.shell]
+program = "/home/stathis/.local/bin/alacritty-tmux"
+
 [font]
 size = 12
 
