@@ -22,9 +22,12 @@ libpng12
 mono-tools
 nitrogen
 nordvpn-bin
+pa-applet
+palemoon-bin
 python-mock
 python-pybrowsers
 python-selenium
 sbxkb
 unetbootin
 urxvt-resize-font-git
+wpgtk
