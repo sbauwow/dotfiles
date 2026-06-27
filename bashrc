@@ -114,3 +114,6 @@ shopt -s histappend
 
 export PATH="$HOME/.npm-global/bin:$PATH"
 export ANDROID_HOME="$HOME/android-sdk"                                                                                                                                                      export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$PATH" 
+
+export THEOS=$HOME/theos
+export PATH=$HOME/theos/bin:$HOME/theos/toolchain/linux/iphone/bin:$PATH

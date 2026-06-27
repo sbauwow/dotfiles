@@ -129,8 +129,8 @@ bindsym $mod+v split v;exec notify-send 'tile vertically'
 bindsym $mod+q split toggle
 
 # voice dictation (nerd-dictation)
-bindsym $mod+o exec --no-startup-id ~/nerd-dictation/.venv/bin/python ~/nerd-dictation/nerd-dictation begin --vosk-model-dir ~/nerd-dictation/model/en &
-bindsym $mod+Shift+o exec --no-startup-id ~/nerd-dictation/.venv/bin/python ~/nerd-dictation/nerd-dictation end
+bindsym $mod+o exec --no-startup-id /home/stathis/.local/bin/dictation-toggle
+bindsym $mod+Shift+o exec --no-startup-id /home/stathis/.local/bin/dictation-stop
 
 # toggle fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -310,7 +310,7 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # Wallpaper + colorscheme. Use `wp <name>` to switch (wpg tracks current via .current symlink).
 # `exec` (not `exec_always`) so i3 reloads don't override a fresh `wp` selection.
 exec --no-startup-id bash -c 'cur=$(basename "$(readlink "$HOME/.config/wpg/.current")" 2>/dev/null); [ -n "$cur" ] && wpg -s "$cur"'
-exec --no-startup-id sleep 1; picom -b
+exec --no-startup-id sh -c 'sleep 1; picom -b --config "$HOME/.config/picom.conf"'
 #exec --no-startup-id manjaro-hello
 exec --no-startup-id ~/dotfiles/conky/launch.sh
 #exec --no-startup-id xscreensaver --no-splash

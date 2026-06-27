@@ -28,6 +28,7 @@ blueman
 bluez-deprecated-tools
 bluez-utils
 bmenu
+btop
 btrfs-progs
 calf
 cantarell-fonts
@@ -37,6 +38,7 @@ chromedriver
 clipit
 cmatrix
 code
+conky
 cpupower
 cronie
 cryptsetup
@@ -95,11 +97,13 @@ gvfs-gphoto2
 gvfs-mtp
 gvfs-smb
 heimdall
+helix
 helm
 helm-synth
 herbstluftwm
 hexchat
 htop
+i3lock
 icaclient
 inetutils
 install-grub
@@ -144,7 +148,11 @@ manjaro-alsa
 manjaro-application-utility
 manjaro-browser-settings
 manjaro-hello
-manjaro-i3-settings
+i3-wm
+i3exit
+i3-scrot
+dunst
+playerctl
 manjaro-pipewire
 manjaro-printer
 manjaro-ranger-settings
@@ -164,6 +172,7 @@ mhwd
 mhwd-db
 micro
 mkinitcpio-openswap
+moc
 modemmanager
 morc_menu
 mousepad
@@ -200,6 +209,7 @@ pavucontrol
 pcmanfm
 perl
 perl-file-mimeinfo
+picom
 pipewire-alsa
 pipewire-pulse
 pipewire-x11-bell

@@ -7,10 +7,22 @@ BAT="/sys/class/power_supply/BAT0"
 
 status=$(cat "$BAT/status")
 capacity=$(cat "$BAT/capacity")
-energy_now=$(cat "$BAT/energy_now")
-energy_full=$(cat "$BAT/energy_full")
-energy_full_design=$(cat "$BAT/energy_full_design")
-power_now=$(cat "$BAT/power_now")
+
+# Two sysfs flavors: energy_*/power_now (µWh/µW) or charge_*/current_now (µAh/µA).
+# Normalize the charge flavor to energy units via voltage so the math below is identical.
+if [[ -r "$BAT/energy_now" ]]; then
+    energy_now=$(cat "$BAT/energy_now")
+    energy_full=$(cat "$BAT/energy_full")
+    energy_full_design=$(cat "$BAT/energy_full_design")
+    power_now=$(cat "$BAT/power_now")
+else
+    voltage_now=$(cat "$BAT/voltage_now")
+    # µAh * µV / 1e6 = µWh ; µA * µV / 1e6 = µW
+    energy_now=$(awk "BEGIN {printf \"%.0f\", $(cat "$BAT/charge_now") * $voltage_now / 1000000}")
+    energy_full=$(awk "BEGIN {printf \"%.0f\", $(cat "$BAT/charge_full") * $voltage_now / 1000000}")
+    energy_full_design=$(awk "BEGIN {printf \"%.0f\", $(cat "$BAT/charge_full_design") * $voltage_now / 1000000}")
+    power_now=$(awk "BEGIN {printf \"%.0f\", $(cat "$BAT/current_now") * $voltage_now / 1000000}")
+fi
 
 # Convert microwatt-hours / microwatts to human units
 watts=$(awk "BEGIN {printf \"%.1f\", $power_now / 1000000}")
