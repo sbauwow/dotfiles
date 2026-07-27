@@ -68,7 +68,7 @@ bindsym $mod+Shift+m exec --no-startup-id ~/.i3/dock-setup.sh
 
 # Start Applications
 bindsym $mod+Ctrl+b exec alacritty -e bmenu
-bindsym $mod+F2 exec palemoon
+bindsym $mod+F2 exec google-chrome-stable
 bindsym $mod+F3 exec alacritty -e yazi
 # bindsym $mod+F3 exec ranger
 bindsym $mod+Shift+F3 exec pcmanfm_pkexec

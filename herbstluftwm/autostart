@@ -29,7 +29,7 @@ hc keybind $Mod-Shift-q quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
 hc keybind $Mod-Return spawn ${TERMINAL:-urxvt} # use your $TERMINAL with xterm as fallback
-hc keybind $Mod-Shift-p spawn palemoon
+hc keybind $Mod-Shift-p spawn google-chrome-stable
 hc keybind $Mod-Shift-f spawn pcmanfm
 hc keybind $Mod-Shift-m spawn mpg123 -@ http://somafm.com/secretagent.pls
 hc keybind $Mod-Shift-t spawn urxvt -tr -sh 20 -fg rgb:bb/bb/bb
